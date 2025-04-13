@@ -3,3 +3,6 @@
 
 ## Abstract
 This paper introduces GraphWave, a dynamic context-adaptive framework that enhances the recognition rate of malicious behaviors through multimodal feature fusion. Comprehensive evaluations on six real-world datasets reveal that GraphWave attains a 99.13% F1 score in threat detection, outperforming the state-of-the-art baseline methods by an average of 7.62%.
+
+## Usage
+'''pip install -r requirements.txt'''
