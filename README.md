@@ -1,5 +1,5 @@
 ## Hi there 👋
-![image] (https://github.com/graphwave/graphwave/blob/main/fig/framework.png)
+![image] (https://github.com/graphwave/graphwave/blob/main/fig/framework.png?raw=true)
 <!--
 **graphwave/graphwave** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
