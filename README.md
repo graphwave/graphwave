@@ -10,7 +10,11 @@ We conducted our experiments on a CentOS 7 (Linux 3.10.0) server equipped with a
 ## Usage
 ```pip install -r requirements.txt```
 
-### Step 1: generate dataset for trainning.
+### Step 1: Generate dataset for trainning.
 ```
 python dataset_gen.py --multiple --contextual --pcaps_path="./middleResults/pcap_data/botnet2014/" --session_pcaps_used="./middleResults/temporal_contextual_data/botnet2014/temporal_session_used.json" --wave_name="cgau8" --data_path="./middleResults/temporal_contextual_data/botnet2014/" --base_dir="./middleResults/pcap_data/botnet2014/"
+```
+### Step 2: Train and evaluate.
+```
+python train.py
 ```
