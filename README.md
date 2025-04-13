@@ -1,7 +1,7 @@
 ## Hi there 👋
-
+![image](https://github.com/graphwave/graphwave/blob/main/fig/framework.png)
 <!--
-![image] (https://github.com/graphwave/graphwave/blob/main/fig/framework.png?raw=true)
+
 
 Here are some ideas to get you started:
 
