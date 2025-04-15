@@ -94,7 +94,7 @@ mapping_unsw = {
         'analysis':9
     }
 
-# 集中管理所有数据集映射（核心配置中心）
+
 DATASET_MAPPINGS = {
     "botnet2014": mapping_botnet,
     "ids2017": mapping_IDS2017,
@@ -110,18 +110,6 @@ DATASET_MAPPINGS = {
 from typing import Dict, Tuple
 
 def get_mapping(dataset_name: str) -> Tuple[Dict, int]:
-    """获取指定数据集的标签映射及类别数量
-    
-    Args:
-        dataset_name (str): 数据集名称（不区分大小写），可选值：botnet/ids2017/ustc
-        
-    Returns:
-        tuple[dict, int]: (标签映射字典, 类别数量)
-        
-    Raises:
-        ValueError: 数据集不存在时抛出异常
-    """
-    # 统一转小写处理，实现不区分大小写的查询
     dataset_name = dataset_name.lower()
     
     if dataset_name not in DATASET_MAPPINGS:
@@ -137,12 +125,11 @@ def get_mapping(dataset_name: str) -> Tuple[Dict, int]:
 import argparse
 def get_args():
     parser = argparse.ArgumentParser(description='Training arguments')
-    parser.add_argument('--data_path', type=str, default='/data/fp/baseline/TrafficScope-modified/middleResults/temporal_contextual_data/botnet2014/', required=False)
+    parser.add_argument('--data_path', type=str, default='/XXXX/botnet2014/', required=False)
     parser.add_argument('--dataset', type=str, default='botnet2014', required=False)
-    parser.add_argument('--contextual', type=str, default = 'no', required=False)#指定yes代表仅使用上下文
-    parser.add_argument('--temporal', type=str, default = 'no', required=False)#yes代表仅使用字节矩阵特征
-    #上述两者contextual和temporal皆为no时，表示使用特征融合的交叉注意力机制
-    parser.add_argument('--wavelet', type=str, default = 'yes', required=False)#yes代表使用wavelet，其他（如no）代表不使用
+    parser.add_argument('--contextual', type=str, default = 'no', required=False)#
+    parser.add_argument('--temporal', type=str, default = 'no', required=False)#
+    parser.add_argument('--wavelet', type=str, default = 'yes', required=False)#
     parser.add_argument('--tsne', type=str, default = 'no', required=False)
     args = parser.parse_args()
     return args

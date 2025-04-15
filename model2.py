@@ -312,39 +312,27 @@ class NetworkTrafficModel(nn.Module):
         )
 
     def forward(self, data, visualize=False):
-        # 图特征编码
         starttime = time.time()
         gat_nodes = self.gat_encoder(data.x_packet, data.x_time, data.edge_index)
         endtime = time.time()
-        #print(f'gat embedding time is: {(endtime-starttime)/len(data)}')
-        #x_packet[batch_size个样本中总上下文会话数量, 64, 64];x_time[batch_size个样本中总上下文会话数量, 64, 64];
-        #gat_nodes[batch_size个样本中总上下文会话数量, 256]
-        gat_graph = global_mean_pool(gat_nodes, data.batch)  # [B, 256]
-        #gat_graph[batch_size, 256]
-        # 时序特征编码
+        gat_graph = global_mean_pool(gat_nodes, data.batch)
         starttime = time.time()
-        trans_feat = self.temporal_encoder(data.main_matrix, data.main_mask)#main_matrix[batch_size, 64, 64]
+        trans_feat = self.temporal_encoder(data.main_matrix, data.main_mask)
         endtime = time.time()
-        #print(f'temporal embedding time is: {(endtime-starttime)/len(data)}')
-        #trans_feat[batch_size, 64, 256]
-        #trans_feat = trans_feat.mean(dim=1)  # [B, 256]
         
-        # 特征融合
         starttime = time.time()
         fused = self.fusion(trans_feat, gat_graph)#fused[batch_size, 256]
         endtime = time.time()
-        #print(f'fusion time is: {(endtime-starttime)/len(data)}')
+
         starttime = time.time()
         results = self.classifier(fused)
         endtime = time.time()
-        #print(f'classification time is: {(endtime-starttime)/len(data)}')
-        #为了说明特征的重要度
+
         if visualize:
             return results, gat_graph, trans_feat.mean(dim=1), fused
-        return results#[batch_size, 13]
+        return results
     
 
-#用于消融实验，去掉上下文，只用当前的特征
 class NetworkTrafficTemporal(nn.Module):
     def __init__(self, gat_in_dim=64, gat_hidden_dim=128, gat_heads=4,
                  temporal_feat_dim=256, temporal_num_heads=4, temporal_num_layers=2,
@@ -363,13 +351,10 @@ class NetworkTrafficTemporal(nn.Module):
         )
 
     def forward(self, data):
-        # 时序特征编码
-        trans_feat = self.temporal_encoder(data.main_matrix, data.main_mask)#main_matrix[batch_size, 64, 64]
-        #trans_feat[batch_size, 64, 256]
-        trans_feat = trans_feat.mean(dim=1)  # [B, 256]
-        return self.classifier(trans_feat)#[batch_size, 13]
+        trans_feat = self.temporal_encoder(data.main_matrix, data.main_mask)
+        trans_feat = trans_feat.mean(dim=1)
+        return self.classifier(trans_feat)
     
-#用于消融实验，去掉当前特征，只用上下文特征来分类
 class NetworkTrafficContextual(nn.Module):
     def __init__(self, gat_in_dim=64, gat_hidden_dim=128, gat_heads=4,
                  temporal_feat_dim=256, temporal_num_heads=4, temporal_num_layers=2,
@@ -387,13 +372,9 @@ class NetworkTrafficContextual(nn.Module):
         )
 
     def forward(self, data):
-        # 图特征编码
         gat_nodes = self.gat_encoder(data.x_packet, data.x_time, data.edge_index)
-        #x_packet[batch_size个样本中总上下文会话数量, 64, 64];x_time[batch_size个样本中总上下文会话数量, 64, 64];
-        #gat_nodes[batch_size个样本中总上下文会话数量, 256]
-        gat_graph = global_mean_pool(gat_nodes, data.batch)  # [B, 256]
-        #gat_graph[batch_size, 256]
-        return self.classifier(gat_graph)#[batch_size, 13]
+        gat_graph = global_mean_pool(gat_nodes, data.batch)
+        return self.classifier(gat_graph)
     
 
 
@@ -411,14 +392,11 @@ class NetworkTrafficUnknown(nn.Module):
         self.fusion = FeatureFusion_gat(gat_dim=fusion_gat_dim, trans_dim=fusion_trans_dim, num_heads=fusion_num_heads)
 
     def forward(self, data, visualize=False):
-        # 图特征编码
         gat_nodes = self.gat_encoder(data.x_packet, data.x_time, data.edge_index)
         gat_graph = global_mean_pool(gat_nodes, data.batch)
 
-        # 时序特征编码
         trans_feat = self.temporal_encoder(data.main_matrix, data.main_mask)
 
-        # 特征融合
         fused = self.fusion(trans_feat, gat_graph)
         return fused
     

@@ -2,7 +2,6 @@ import os
 import cv2
 import numpy as np
 
-#获取路径下面所有的文件或者文件夹
 def get_contents_in_dir(dir_path, notstartswith, endswith):
     contents = os.listdir(dir_path)
     for e in notstartswith:
@@ -28,7 +27,6 @@ def is_matrix_similar(mat1, mat2, threshold=0.9):
     hist_2 = cv2.normalize(hist_2, hist_2, 0, 1, cv2.NORM_MINMAX, -1)
 
     similar_score = cv2.compareHist(hist_1, hist_2, 0)
-    # print(f'mat1 and mat2 similar score: {similar_score}')
     if similar_score > threshold:
         return True
     return False

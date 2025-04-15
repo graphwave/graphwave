@@ -256,7 +256,6 @@ def main():
 
 
     
-    # 绘制混淆矩阵
     cm = confusion_matrix(labels_np, preds_np)
     plt.figure(figsize=(10, 8))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
